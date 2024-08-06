@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    $('#loanParameters\\.date, #loanParameters\\.paymentDay').datepicker({
-        format: 'dd.mm.yyyy',
+    $('#loanParameters\\.date').datepicker({
+        format: 'yyyy.mm.dd',
         language: 'ru',
         todayHighlight: true,
         weekStart: 1
