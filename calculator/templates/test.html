@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="center-container">
+    <div class="calculator">
+<!-- ko with: loanParameters -->
+            <div class="row-fluid">
+                <div class="span2 phone-column4"><label class="control-label" data-bind="attr : {'for' : 'loanParameters' + '.' + 'amount'}" for="loanParameters.amount">Сумма</label></div>
+                <div class="span4 phone-column8"><input class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'amount',name : 'loanParameters' + '.' + 'amount'},convertedValue : amount,convert : decimalToStringFormatter(2),convertBack : stringToDecimal,behaviour : 'formatNumber',behaviour-options : 2" id="loanParameters.amount" name="loanParameters.amount" type="text"></div>
+            </div>
+            <div class="row-fluid">
+                <div class="span2 phone-column4"><label class="control-label" data-bind="attr : {'for' : 'loanParameters' + '.' + 'root_periodValue'}" for="loanParameters.root_periodValue">Срок</label></div>
+                <div class="span2 phone-column4"><input class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'root_periodValue',name : 'loanParameters' + '.' + 'root_periodValue'},convertedValue : $root.periodValue,convert : intToString,convertBack : stringToInt,behaviour : 'formatNumber',behaviour-options : 0" id="loanParameters.root_periodValue" name="loanParameters.root_periodValue" type="text"></div>
+                <div class="span2 phone-column4"><select class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'root_periodType',name : 'loanParameters' + '.' + 'root_periodType'},value : $root.periodType,options : Dictionaries.loanPeriodTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.root_periodType" name="loanParameters.root_periodType"><option value="1">месяцев</option><option value="2">лет</option></select></div>
+                <div class="phone-new-row"></div>
+                <div class="span2 phone-column4"><label class="control-label" data-bind="attr : {'for' : 'loanParameters' + '.' + 'date'}" for="loanParameters.date">Дата получения</label></div>
+                <div class="span3 phone-column8"><input class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'date',name : 'loanParameters' + '.' + 'date'},convertedValue : date,convert : dateToString,convertBack : stringToDate,behaviour : 'datepicker',behaviour-options : {'weekStart':1,'format':'dd.mm.yyyy','language':'ru','todayHighlight':true}" id="loanParameters.date" name="loanParameters.date" type="text"></div>
+            </div>
+            <div class="row-fluid">
+                <div class="span2 phone-column4"><label class="control-label" data-bind="attr : {'for' : 'loanParameters' + '.' + 'rateType'}" for="loanParameters.rateType">Ставка</label></div>
+                <div class="span4 phone-column8"><select class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'rateType',name : 'loanParameters' + '.' + 'rateType'},value : rateType,options : Dictionaries.rateTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.rateType" name="loanParameters.rateType"><option value="1">Фиксированная</option><option value="2">Изменяемая</option></select></div>
+                <div class="phone-new-row"></div>
+                <div class="span2 phone-offset4 phone-column4"><input class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'rate',name : 'loanParameters' + '.' + 'rate'},convertedValue : rate,convert : function(v){return decimalToStringFormatter(2)(v * 100);},convertBack : function(t){{return stringToDecimal(t)/100}},behaviour : 'formatNumber',behaviour-options : 2,visible : (rateType() == 1)" id="loanParameters.rate" name="loanParameters.rate" type="text"></div>
+                <div class="span3 phone-column4"><select class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'periodType',name : 'loanParameters' + '.' + 'periodType'},value : periodType,options : Dictionaries.ratePeriodTypes,optionsValue : 'key',optionsText : 'value',visible : (rateType() == 1)" id="loanParameters.periodType" name="loanParameters.periodType"><option value="2">% в месяц</option><option value="1">% в год</option></select></div>
+            </div>
+<div class="row-fluid" data-bind="toggledVisible : (rateType() == 2)" style="display: none;">
+                <table class="table table-bordered offset2 span10 phone-column12">
+                    <thead>
+                        <tr>
+                            <th class="span1">
+                                <span>&nbsp;&nbsp;&nbsp;</span>
+                            </th>
+                            <th class="span5">
+                                <span class="hidden-phone">
+                                    Дата вступления в силу
+                                </span>
+                                <span class="visible-phone">
+                                    Дата
+                                </span>
+                            </th>
+                            <th class="span6">
+                                Ставка
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<!-- ko foreach: changedByDateRates --><!-- /ko -->
+                        <tr>
+                            <td colspan="3">
+                                <button class="btn btn-block" data-bind="click : function(){changedByDateRates.push($root.newChangedByDateRate($data));},clickBuble : false" onclick="return false;"><i class="icon-plus icon-gray"></i> Добавить ставку</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+</div>
+            <div class="line"></div>
+            <div class="row-fluid">
+                <div class="span2 phone-column4"><label class="control-label" data-bind="attr : {'for' : 'loanParameters' + '.' + 'paymentType'}" for="loanParameters.paymentType">Тип платежей</label></div>
+                <div class="span4 phone-column8"><select class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'paymentType',name : 'loanParameters' + '.' + 'paymentType'},value : paymentType,options : Dictionaries.paymentTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.paymentType" name="loanParameters.paymentType"><option value="1">Аннуитетные</option><option value="2">Дифференцированные</option></select></div>
+                <div class="phone-new-row"></div>
+                <div class="offset2 span4 phone-offset4 phone-column8">
+                    <input class="pull-left" data-bind="checked : $root.hasAdditionalPaymentSettings,attr : {id : 'loanParameters' + '.' + 'root_hasAdditionalPaymentSettings',name : 'loanParameters' + '.' + 'root_hasAdditionalPaymentSettings'}" id="loanParameters.root_hasAdditionalPaymentSettings" name="loanParameters.root_hasAdditionalPaymentSettings" type="checkbox">
+                    <label class="control-label pull-left" data-bind="attr : {'for' : 'loanParameters' + '.' + 'root_hasAdditionalPaymentSettings'}" for="loanParameters.root_hasAdditionalPaymentSettings">Расширенные настройки</label>
+                </div>
+            </div>
+<div data-bind="toggledVisible : $root.hasAdditionalPaymentSettings" style="display: none;">
+                <div class="row-fluid">
+                    <div class="offset2 span5 phone-column12">
+                        <select class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'paymentRoundType',name : 'loanParameters' + '.' + 'paymentRoundType'},value : paymentRoundType,options : Dictionaries.paymentRoundTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.paymentRoundType" name="loanParameters.paymentRoundType"><option value="1">Округлять платеж до копеек</option><option value="0">Округлять платеж до рублей</option><option value="2">Округлять платеж до десятков</option><option value="3">Округлять платеж до сотен</option></select>
+                    </div>
+                    <div class="phone-new-row"></div>
+                    <div class="span5 phone-column12">
+                        <select class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'percentRoundType',name : 'loanParameters' + '.' + 'percentRoundType'},value : percentRoundType,options : Dictionaries.percentSumRoundType,optionsValue : 'key',optionsText : 'value'" id="loanParameters.percentRoundType" name="loanParameters.percentRoundType"><option value="2">Без промежуточных округлений суммы %</option><option value="0">Округление суммы % по границе года</option><option value="1">Округление % по границе високосного года</option></select>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="offset2 span5 phone-column12">
+                        <select class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'paymentDateType',name : 'loanParameters' + '.' + 'paymentDateType'},value : paymentDateType,options : Dictionaries.paymentDateTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.paymentDateType" name="loanParameters.paymentDateType"><option value="1">Платежи в день выдачи кредита</option><option value="2">Платежи в последний день месяца</option><option value="3">Платежи 1-го числа</option><option value="4">Платежи 2-го числа</option><option value="5">Платежи 3-го числа</option><option value="6">Платежи 4-го числа</option><option value="7">Платежи 5-го числа</option><option value="8">Платежи 6-го числа</option><option value="9">Платежи 7-го числа</option><option value="10">Платежи 8-го числа</option><option value="11">Платежи 9-го числа</option><option value="12">Платежи 10-го числа</option><option value="13">Платежи 11-го числа</option><option value="14">Платежи 12-го числа</option><option value="15">Платежи 13-го числа</option><option value="16">Платежи 14-го числа</option><option value="17">Платежи 15-го числа</option><option value="18">Платежи 16-го числа</option><option value="19">Платежи 17-го числа</option><option value="20">Платежи 18-го числа</option><option value="21">Платежи 19-го числа</option><option value="22">Платежи 20-го числа</option><option value="23">Платежи 21-го числа</option><option value="24">Платежи 22-го числа</option><option value="25">Платежи 23-го числа</option><option value="26">Платежи 24-го числа</option><option value="27">Платежи 25-го числа</option><option value="28">Платежи 26-го числа</option><option value="29">Платежи 27-го числа</option><option value="30">Платежи 28-го числа</option><option value="31">Платежи 29-го числа</option><option value="32">Платежи 30-го числа</option></select>
+                    </div>
+                    <div class="phone-new-row" data-bind="visible : $root.isFirstPaymentVisible" style="display: none;"></div>
+                    <div class="span5 phone-column12" data-bind="visible : $root.isFirstPaymentVisible" style="display: none;">
+                        <select class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'firstPaymentPolicy',name : 'loanParameters' + '.' + 'firstPaymentPolicy'},value : firstPaymentPolicy,options : Dictionaries.firstPaymentPolicy,optionsValue : 'key',optionsText : 'value'" id="loanParameters.firstPaymentPolicy" name="loanParameters.firstPaymentPolicy"><option value="0">Первый платеж: % + аннуитет</option><option value="1">Первый платеж: только проценты</option><option value="2">Первый платеж: только аннуитет</option><option value="3">Первый аннуитет ранее месяца</option></select>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="offset1 span1 phone-column1">
+                        <input class="pull-right" data-bind="checked : $root.isWorkingDayTransferable,attr : {id : 'loanParameters' + '.' + 'root_isWorkingDayTransferable',name : 'loanParameters' + '.' + 'root_isWorkingDayTransferable'}" id="loanParameters.root_isWorkingDayTransferable" name="loanParameters.root_isWorkingDayTransferable" type="checkbox">
+                    </div>
+                    <div class="span6 phone-column11">
+                        <label class="control-label pull-left" data-bind="attr : {'for' : 'loanParameters' + '.' + 'root_isWorkingDayTransferable'}" for="loanParameters.root_isWorkingDayTransferable">Переносить дату, если платеж приходится на выходной </label>
+                    </div>
+                    <div class="phone-new-row" data-bind="visible : $root.isWorkingDayTransferable" style="display: none;"></div>
+                    <div class="span4 phone-column12" data-bind="toggledVisible : $parent.isWorkingDayTransferable" style="display: none;">
+                        <select class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'root_workingDayType',name : 'loanParameters' + '.' + 'root_workingDayType'},value : $root.workingDayType,options : Dictionaries.workingCalendarTransferType,optionsValue : 'key',optionsText : 'value'" id="loanParameters.root_workingDayType" name="loanParameters.root_workingDayType"><option value="1">на последующий рабочий день</option><option value="2">на предшествующий рабочий день</option></select>
+                    </div>
+                </div>
+                <div class="row-fluid" data-bind="visible : $root.isWorkingDayTransferable" style="display: none;">
+                    <div class="offset1 span1 phone-column1">
+                        <input class="pull-right" data-bind="checked : isCalendarTransferTypeAppliedForPercents,attr : {id : 'loanParameters' + '.' + 'isCalendarTransferTypeAppliedForPercents',name : 'loanParameters' + '.' + 'isCalendarTransferTypeAppliedForPercents'}" id="loanParameters.isCalendarTransferTypeAppliedForPercents" name="loanParameters.isCalendarTransferTypeAppliedForPercents" type="checkbox">
+                    </div>
+                    <div class="span10 phone-column11">
+                        <label class="control-label pull-left" data-bind="attr : {'for' : 'loanParameters' + '.' + 'isCalendarTransferTypeAppliedForPercents'}" for="loanParameters.isCalendarTransferTypeAppliedForPercents">Начислять проценты в соответствии переносами платежей</label>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="offset1 span1 phone-column1">
+                        <input class="pull-right" data-bind="checked : tuneMonthAnnuity,attr : {id : 'loanParameters' + '.' + 'tuneMonthAnnuity',name : 'loanParameters' + '.' + 'tuneMonthAnnuity'}" id="loanParameters.tuneMonthAnnuity" name="loanParameters.tuneMonthAnnuity" type="checkbox">
+                    </div>
+                    <div class="span10 phone-column11">
+                        <label class="control-label pull-left" data-bind="attr : {'for' : 'loanParameters' + '.' + 'tuneMonthAnnuity'}" for="loanParameters.tuneMonthAnnuity">Последний платеж не может превышать аннуитет</label>
+                    </div>
+                </div>
+</div>
+<div class="row-fluid" data-bind="toggledVisible : $root.hasAdditionalPaymentSettings" style="display: none;">
+                <div class="offset1 span1 phone-column1">
+                    <input class="pull-right" data-bind="checked : onlyPercentFirstly,attr : {id : 'loanParameters' + '.' + 'onlyPercentFirstly',name : 'loanParameters' + '.' + 'onlyPercentFirstly'}" id="loanParameters.onlyPercentFirstly" name="loanParameters.onlyPercentFirstly" type="checkbox">
+                </div>
+                <div class="span4 phone-column11">
+                    <label class="control-label pull-left" data-bind="attr : {'for' : 'loanParameters' + '.' + 'onlyPercentFirstly'}" for="loanParameters.onlyPercentFirstly">Кредитные каникулы первые</label>
+                </div>
+                <div class="phone-new-row"></div>
+                <div class="span2 phone-offset4 phone-column4" data-bind="toggledVisible : onlyPercentFirstly" style="display: none;">
+                    <input class="span12" data-bind="attr : {id : 'loanParameters' + '.' + 'root_onlyPercentPeriodValue',name : 'loanParameters' + '.' + 'root_onlyPercentPeriodValue'},convertedValue : $root.onlyPercentPeriodValue,convert : intToString,convertBack : stringToInt,behaviour : 'formatNumber',behaviour-options : 0" id="loanParameters.root_onlyPercentPeriodValue" name="loanParameters.root_onlyPercentPeriodValue" type="text">
+                </div>
+                <div class="span3 phone-column4" data-bind="toggledVisible : onlyPercentFirstly" style="display: none;">
+                    <select class="all-column12" data-bind="attr : {id : 'loanParameters' + '.' + 'root_onlyPercentPeriodType',name : 'loanParameters' + '.' + 'root_onlyPercentPeriodType'},value : $root.onlyPercentPeriodType,options : Dictionaries.loanPeriodTypes,optionsValue : 'key',optionsText : 'value'" id="loanParameters.root_onlyPercentPeriodType" name="loanParameters.root_onlyPercentPeriodType"><option value="1">месяцев</option><option value="2">лет</option></select>
+                </div>
+</div>
+<!-- /ko -->
+        <div class="line"></div>
+<!-- ko foreach: commissionParameters --><!-- /ko -->
+        <div class="row-fluid">
+            <button class="btn btn-block" data-bind="click : function(){commissionParameters.push(newCommissionParameter());},clickBuble : false" onclick="return false;"><i class="icon-plus icon-gray"></i> Добавить комиссию</button>
+        </div>
+        <div class="row-fluid line"></div>
+<!-- ko foreach: loanAdvancedRepayments --><!-- /ko -->
+        <div class="row-fluid">
+            <button class="btn btn-block" data-bind="click : function(){loanAdvancedRepayments.push(newAdvancedRepayment());},clickBuble : false" onclick="return false;"><i class="icon-plus icon-gray"></i> Добавить досрочное погашение</button>
+        </div>
+<!-- ko with: loanAdvancedRepaymentPlan -->
+            <div class="row-fluid">
+                <div class="span1 phone-column1">
+                    <input class="pull-right" data-bind="checked : $root.hasPlan,attr : {id : 'loanAdvancedRepaymentPlan' + '.' + 'root_hasPlan',name : 'loanAdvancedRepaymentPlan' + '.' + 'root_hasPlan'}" id="loanAdvancedRepaymentPlan.root_hasPlan" name="loanAdvancedRepaymentPlan.root_hasPlan" type="checkbox">
+                </div>
+                <div class="span11 phone-column11">
+                    <label class="control-label pull-left" data-bind="attr : {'for' : 'loanAdvancedRepaymentPlan' + '.' + 'root_hasPlan'},css : {'bold-link' : $root.hasPlan}" for="loanAdvancedRepaymentPlan.root_hasPlan">Рассчитать оптимальный план погашения кредита по выделенному бюджету</label>
+                </div>
+            </div>
+<div data-bind="toggledVisible : $root.hasPlan" style="display: none;">
+                <div class="row-fluid">
+                    <div class="span1 phone-column1">
+                        <input class="pull-right" data-bind="checked : payOnDayOfLoanPayment,attr : {id : 'loanAdvancedRepaymentPlan' + '.' + 'payOnDayOfLoanPayment',name : 'loanAdvancedRepaymentPlan' + '.' + 'payOnDayOfLoanPayment'}" id="loanAdvancedRepaymentPlan.payOnDayOfLoanPayment" name="loanAdvancedRepaymentPlan.payOnDayOfLoanPayment" type="checkbox">
+                    </div>
+                    <div class="span9 phone-column11">
+                        <label class="control-label pull-left long-checkbox-label phone-multiline" data-bind="attr : {'for' : 'loanAdvancedRepaymentPlan' + '.' + 'payOnDayOfLoanPayment'}" for="loanAdvancedRepaymentPlan.payOnDayOfLoanPayment">Досрочное погашение кредита возможно только в день очередного платежа</label>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span2 phone-column4">
+                        <label class="control-label hidden-phone multiline" data-bind="attr : {'for' : 'loanAdvancedRepaymentPlan' + '.' + 'recalculationType'}" for="loanAdvancedRepaymentPlan.recalculationType">Пересчет графика платежей</label>
+                        <label class="control-label hidden-desktop hidden-tablet multiline" data-bind="attr : {'for' : 'loanAdvancedRepaymentPlan' + '.' + 'recalculationType'}" for="loanAdvancedRepaymentPlan.recalculationType">Пересчет графика</label>
+                    </div>
+                    <div class="span4 phone-column8">
+                        <select class="all-column12" data-bind="attr : {id : 'loanAdvancedRepaymentPlan' + '.' + 'recalculationType',name : 'loanAdvancedRepaymentPlan' + '.' + 'recalculationType'},value : recalculationType,options : Dictionaries.advancedRepaymentRecalculationType,optionsValue : 'key',optionsText : 'value'" id="loanAdvancedRepaymentPlan.recalculationType" name="loanAdvancedRepaymentPlan.recalculationType"><option value="1">Уменьшить срок кредита</option><option value="2">Уменьшить месячный платеж</option><option value="3">Уменьшить месячный платеж (по пропорции)</option><option value="4">Уменьшить месячный платеж (подобрать по последнему платежу)</option></select>
+                    </div>
+<!-- ko ifnot: payOnDayOfLoanPayment -->
+                        <div class="phone-new-row"></div>
+                        <div class="span6 phone-column12">
+                            <select class="all-column12" data-bind="attr : {id : 'loanAdvancedRepaymentPlan' + '.' + 'firstPaymentPolicy',name : 'loanAdvancedRepaymentPlan' + '.' + 'firstPaymentPolicy'},value : firstPaymentPolicy,options : Dictionaries.advancedRepaymentFirstPaymentPolicy,optionsValue : 'key',optionsText : 'value'" id="loanAdvancedRepaymentPlan.firstPaymentPolicy" name="loanAdvancedRepaymentPlan.firstPaymentPolicy"><option value="0">Последующий ежемесячный платеж - % + погашение</option><option value="1">Пропустить последующий ежемесячный платеж</option><option value="2">Последующий ежемесячный платеж - только %</option></select>
+                        </div>
+<!-- /ko -->
+                </div>
+<!-- ko ifnot: payOnDayOfLoanPayment -->
+                    <div class="row-fluid">
+                        <div class="offset6 span6 phone-column12">
+                            <select class="all-column12" data-bind="attr : {id : 'loanAdvancedRepaymentPlan' + '.' + 'payOffPolicy',name : 'loanAdvancedRepaymentPlan' + '.' + 'payOffPolicy'},value : payOffPolicy,options : Dictionaries.advancedRepaymentPayOffPolicy,optionsValue : 'key',optionsText : 'value'" id="loanAdvancedRepaymentPlan.payOffPolicy" name="loanAdvancedRepaymentPlan.payOffPolicy"><option value="0">Сначала погашаются проценты по долгу</option><option value="1">Сумма полностью идет на погашение остатка по долгу</option></select>
+                        </div>
+                    </div>
+<!-- /ko -->
+                <div class="line">
+                </div>
+                <label class="control-label pull-left">
+                    Ниже формируется бюджет, из которого будут оплачены все расходы, связанные с погашением кредита. <a target="_blank" href="https://fincalculator.ru/articles/kak-optimalno-pogashat-kredit">Подробнее...</a>
+                </label>
+                <div class="clearfix">
+                </div>
+<!-- ko foreach: incomes --><!-- /ko -->
+                <div class="row-fluid">
+                    <button class="btn btn-block" data-bind="click : function(){incomes.push($root.newAdvancedRepaymentIncome());},clickBuble : false" onclick="return false;"><i class="icon-plus icon-gray"></i> Добавить статью бюджета на погашение кредита</button>
+                </div>
+</div>
+<!-- /ko -->
+        <div class="row-fluid line"></div>
+        <div class="row-fluid calc-row">
+<!-- ko with: inflationParameters -->
+                <div class="span1 phone-column1">
+                    <input class="pull-right" data-bind="checked : isDiscounted,attr : {id : 'inflationParameters' + '.' + 'isDiscounted',name : 'inflationParameters' + '.' + 'isDiscounted'}" id="inflationParameters.isDiscounted" name="inflationParameters.isDiscounted" type="checkbox">
+                </div>
+                <div class="span3 phone-column4">
+                    <label class="control-label pull-left" data-bind="attr : {'for' : 'inflationParameters' + '.' + 'isDiscounted'}" for="inflationParameters.isDiscounted">Учитывать инфляцию</label>
+                </div>
+<!-- /ko -->
+<!-- ko with: inflationParameters -->
+<!-- ko if: isDiscounted --><!-- /ko -->
+<!-- ko if: isDiscounted --><!-- /ko -->
+<!-- /ko -->
+            <div class="phone-new-row"></div>
+<div class="span8" data-bind="css : {'span4' : inflationParameters().isDiscounted,'span8' : function(){return !inflationParameters().isDiscounted(); }}">
+                <button class="btn btn-block btn-primary" data-bind="click : calculate,clickBuble : false,css : {'btn-primary' : !isCalculationActual() &amp;&amp; !isCalculating()},disable : isCalculating">
+                    Рассчитать
+                    <img src="https://fincalculator.ru/img/ajax_loader.gif" alt="Расчет..." data-bind="visible : isCalculating" style="display: none;">
+                </button>
+</div>
+        </div>
+        <div id="yandex-mobile-maxi"></div>
+        <div data-bind="text : serverError" class="error"></div>
+        <div class="row-fluid line">
+        </div>
+
+<div class="row-fluid" data-bind="toggledVisible : isCalculationActual" style="display: none;">
+<!-- ko with: result --><!-- /ko -->
+</div>
+    </div>
+    <div id="yandex-desktop"></div>
+    <script type="text/javascript">
+        (function (w, d, n, s, t) {
+            var options = [
+                /*{
+                    renderTo: 'yandex-mobile-mini', blocks: [{ blockId: 'R-A-79310-9', statId: 502 }]
+                },*/
+                {
+                    renderTo: 'yandex-desktop', blocks: [{ blockId: 'R-A-79310-8', statId: 501 }]
+                },
+                {
+                    renderTo: 'yandex-mobile-maxi', blocks: [{ blockId: 'R-A-79310-12', statId: 504 }]
+                }
+            ];
+            var sendStat = function (ns, name, e) {
+                try {
+                    if (__server_tracer && __server_tracer.sendEvent) {
+                        __server_tracer.sendEvent(ns, name, e);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            var load = function (options) {
+                try {
+                    w[n].push(function () {
+                            var renderRtb = function (arg) {
+                                var isHidden = function (nativeElement) {
+                                    if (!nativeElement) {
+                                        return false;
+                                    }
+                                    var style = window.getComputedStyle(nativeElement);
+                                    if (style.display === 'none') {
+                                        return true;
+                                    }
+
+                                    return false;
+                                }
+                                if (isHidden(document.getElementById(arg.renderTo)))
+                                    return;
+                                var idx = Math.round(Math.random() * arg.blocks.length * 1000) % arg.blocks.length;
+                                var block = arg.blocks[idx];
+                                var start = Date.now();
+                                var advSettings = { rtbBlock: block.blockId, statId: block.statId };
+                                sendStat('Adv', 'Requested', advSettings);
+                                Ya.Context.AdvManager.render({
+                                    blockId: block.blockId,
+                                    renderTo: arg.renderTo,
+                                    statId: block.statId,
+                                    onRender: function (data) {
+                                        advSettings['skipped'] = false;
+                                        advSettings['loadTime'] = Date.now() - start;
+                                        advSettings['product'] = data && data.product;
+                                        sendStat('Adv', 'Loaded', advSettings);
+                                    }
+                                },
+                                    function () {
+                                        advSettings['errorMessage'] = 'The auction failed';
+                                        sendStat('Adv', 'Failed', advSettings);
+                                    });
+                            };
+                            for (var i = 0; i < options.length; i++) {
+                                renderRtb(options[i]);
+                            }
+                        });
+                } catch (e) {
+                    console.error(e);
+                }
+            };
+            var isLoaded = function (options) {
+                for (var i = 0; i < options.length; i++) {
+                    var e = document.getElementById(options[i].renderTo);
+                    var isEmpty = !e.innerHTML || !e.innerHTML.trim();
+                    if (!isEmpty)
+                        return true;
+                }
+                return false;
+            }
+            load(options);
+            setTimeout(function () {
+                if (!isLoaded(options)) {
+                    load(options)
+                }
+            }, 15000);
+        })(this, this.document, "yaContextCb");
+    </script>
+    <div class="clearfix"></div>
+</div>
+</body>
+</html>
