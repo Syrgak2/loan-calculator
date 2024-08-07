@@ -16,3 +16,13 @@ $(document).ready(function(){
         }
     });
 });
+
+$(document).ready(function() {
+    $('#loanParameters\\.paymentType').change(function() {
+        if ($(this).val() === '3') {
+            $('.markup').show();
+        } else {
+            $('.markup').hide();
+        }
+    });
+});

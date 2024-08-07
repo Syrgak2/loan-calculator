@@ -50,36 +50,25 @@
             </div>
             <div class="row">
                 <div class="col-md-2 phone-column4">
-                    <label class="control-label" for="loanParameters.rateType">Ставка</label>
-                </div>
-                <div class="col-md-3 phone-column8">
-                    <select class="all-column" id="loanParameters.rateType" name="loanParameters.rateType">
-                        <option value="1">Фиксированная</option>
-                        <option value="2">Изменяемая</option>
-                    </select>
-                </div>
-                <div class="col-md-2 phone-offset4 phone-column4">
-                    <input class="all-column12" id="percent" name="percent" type="text" placeholder="Процент">
-                </div>
-                <div class="col-md-3 phone-column4">
-                    <select class="all-column12" id="percentType" name="percentType">
-                        <option value="2">% в месяц</option>
-                        <option value="1">% в год</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="line"></div>
-            <div class="row">
-                <div class="col-md-2 phone-column4">
-                            <label class="control-label" for="loanParameters.paymentType">Тип платежей</label>
+                    <label class="control-label" for="loanParameters.paymentType">Тип платежей</label>
                 </div>
                 <div class="col-md-4 phone-column8">
                     <select class="all-column12" id="loanParameters.paymentType" name="loanParameters.paymentType">
                         <option value="1">Аннуитетные</option>
                         <option value="2">Дифференцированные</option>
+                        <option value="3">Аннуитетный по исламским принципам</option>
                     </select>
                 </div>
+                <div class="col-md-2 phone-offset4 phone-column4">
+                    <input class="all-column12" id="percent" name="percent" type="text" placeholder="Процент">
+                </div>
+                <div class="col-md-3 phone-column4 markup" style="display: none;">
+                    <input id="loanParameters.markup" name="loanParameters.markup" type="text" placeholder="Нацценка">
+                </div>
+            </div>
+
+            <div class="line"></div>
+            <div class="row">
                 <div class="offset2 col-md-4 phone-offset4 phone-column8">
                     <input class="pull-left" id="loanParameters.advancedSettings" name="loanParameters.advancedSettings" type="checkbox">
                     <label class="control-label pull-left" for="loanParameters.advancedSettings">Расширенные настройки</label>
@@ -187,6 +176,17 @@
                     <div class="col-md-10 phone-column11">
                         <label class="control-label pull-left" for="loanParameters.tuneMonthAnnuity">Последний платеж не может превышать аннуитет</label>
                     </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class="offset-1 col-md-8">
+                        <label class="control-label pull-right" for="loanParameters.creditVacation">Кредитные каникулы</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="pull-left" id="loanParameters.creditVacation" name="loanParameters.creditVacation" type="text">
+                    </div>
                 </div>
             </div>
 
@@ -200,13 +200,13 @@
                 <table id="paymentCalculationTable">
                     <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Дата</th>
-                        <th>Сумма</th>
-                        <th>Погошение основного долга</th>
-                        <th>Выалата процентов</th>
-                        <th>Остаток</th>
-                        <th>Описание</th>
+                        <th class="table">No</th>
+                        <th class="table">Дата</th>
+                        <th class="table">Сумма</th>
+                        <th class="table">Погошение основного долга</th>
+                        <th class="table">Выалата процентов</th>
+                        <th class="table">Остаток</th>
+                        <th class="table">Описание</th>
                     </tr>
                     <tbody>
 
