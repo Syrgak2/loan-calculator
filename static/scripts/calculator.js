@@ -67,7 +67,7 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
             currentPayDate = calculateNextPaymentDate(currentPayDate);
         }
 
-        percentPayment = differentiatedCalculation(calculationMethod, oldPayDate, currentPayDate, currentLoadBalance, percent);
+        percentPayment = differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, currentLoadBalance, percent);
         // расчитывает оплаты основного долго в последниу месяц
         // Делает так чтобы не оставалась остаток по основному долгу
         if (i === periodValue - 1) {
@@ -158,6 +158,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
 
         percent_sum = parseFloat((currentLoadBalance * daily_interest_rate * days_in_calculation).toFixed(2));
         main_sum = parseFloat((month_payment - percent_sum).toFixed(2));
+
         // Условия которые отрабатывает при добавлени отпусков
         if (creditVacation > 0 && creditVacation > periodValue) {
             throw new Error('Отпуск не должен перевышать перюд на который брался кредит');
@@ -167,6 +168,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
             month_payment = percent_sum + main_sum;
             actualCreditVacation -= 1;
         }
+
         // расчитывает оплаты основного долго в последниу месяц
         // Делает так чтобы не оставалась остаток по основному долгу
         if (i === periodValue - 1) {
@@ -201,7 +203,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
 
         const item = {
             number: i + 1,
-            date: currentPayDate,
+            date: formatDate(currentPayDate),
             sum: month_payment,
             repaymentPrincipalDebt: parseFloat(parseFloat(main_sum).toFixed(2)),
             percentPayment: percent_sum,
@@ -305,7 +307,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
 
         const item = {
             number: i + 1,
-            date: currentPayDate,
+            date: formatDate(currentPayDate),
             sum: month_payment,
             repaymentPrincipalDebt: parseFloat(parseFloat(main_sum).toFixed(2)),
             percentPayment: percent_sum,
@@ -319,6 +321,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
 }
 
 
+// Функция для генерации таблицы
 function generateTableRows(data) {
     const tbody = document.querySelector('#paymentCalculationTable tbody');
     tbody.innerHTML = '';
@@ -363,11 +366,12 @@ function generateTableRows(data) {
 
 
 
-function differentiatedCalculation(calculationMethod, oldPayDate, currentPayDate, amount, percent) {
+// Проценты для дифференцированного расчета
+function differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, amount, percent) {
         let sumDate = getSumOfDatesPayment(calculationMethod, oldPayDate, currentPayDate);
         let sumDateOfYear = getSumDateOfYear(calculationMethod);
     return parseFloat((parseFloat(amount) * (parseFloat(percent) / 100 * parseFloat(sumDate) / sumDateOfYear)).toFixed(2))
-    }
+}
 
 
 //  id 1 = 30/360
