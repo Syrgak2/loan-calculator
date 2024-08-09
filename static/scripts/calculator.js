@@ -36,8 +36,7 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
     let sum = parseFloat((amount / periodValue).toFixed(2));
     let currentLoadBalance = parseFloat(amount);
     let oldPayDate = loanGivenDate;
-    let currentPayDate = calculateNextPaymentDate(loanGivenDate);
-        currentPayDate.setDate(paymentDate);
+    let currentPayDate = calculateNextPaymentDate(loanGivenDate, paymentDate);
     let percentPayment;
     let actualCreditVacation = creditVacation;
     let month_payment;
@@ -64,7 +63,7 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
         // Обновление значений даты платежа для этой итерации если это не первая итерация
         if (i !== 0 && i !== periodValue) {
             oldPayDate = currentPayDate;
-            currentPayDate = calculateNextPaymentDate(currentPayDate);
+            currentPayDate = calculateNextPaymentDate(currentPayDate, paymentDate);
         }
 
         percentPayment = differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, currentLoadBalance, percent);
@@ -111,9 +110,6 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
             sum = parseFloat((amount / (periodValue - creditVacation)).toFixed(2))
         }
 
-        // Обновление значений для следующей итерации
-        oldPayDate = currentPayDate;
-        currentPayDate = calculateNextPaymentDate(parseDate(currentPayDate));
     }
 
     return data;
@@ -124,8 +120,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
     let currentLoadBalance = parseFloat(amount);
     let oldPayDate = loanGivenDate;
     // Ставить как текуший день оплаты следиюший месяц выдачи кредита и день выброной для оплаты
-    let currentPayDate = calculateNextPaymentDate(loanGivenDate);
-        currentPayDate.setDate(paymentDate);
+    let currentPayDate = calculateNextPaymentDate(loanGivenDate, paymentDate);
     let daily_interest_rate;
     let days_in_calculation;
     let days_in_year;
@@ -148,7 +143,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
         // Обновление значений для этой итерации если это не первая итерация
         if (i !== 0 && i !== periodValue) {
             oldPayDate = currentPayDate;
-            currentPayDate = calculateNextPaymentDate(currentPayDate);
+            currentPayDate = calculateNextPaymentDate(currentPayDate, paymentDate);
         }
 
         description = "Ежемесячный платеж за " + formatDate(currentPayDate);
@@ -175,7 +170,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
             main_sum = currentLoadBalance;
             month_payment = parseFloat((parseFloat(main_sum) + parseFloat(percent_sum)).toFixed(2));
 
-            // иоги 
+            // иоги
             totalMonthPaymentSum += month_payment;
             totalPercentPayment += percent_sum;
             totalRepaymentPrincipalDebt += main_sum;
@@ -188,9 +183,6 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
             totalPercentPayment += percent_sum;
             totalRepaymentPrincipalDebt += main_sum;
         }
-
-
-
 
         if (i === parseInt(periodValue)) {
             console.log("if i === periodValue")
@@ -228,8 +220,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
     let currentLoadBalance = parseFloat(amount);
     let oldPayDate = loanGivenDate;
     // Ставить как текуший день оплаты следиюший месяц выдачи кредита и день выброной для оплаты
-    let currentPayDate = calculateNextPaymentDate(loanGivenDate);
-        currentPayDate.setDate(paymentDate);
+    let currentPayDate = calculateNextPaymentDate(loanGivenDate, paymentDate);
     let daily_interest_rate;
     let days_in_calculation;
     let days_in_year;
@@ -253,7 +244,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
         // Обновление значений для этой итерации если это не первая итерация
         if (i !== 0 && i !== periodValue) {
             oldPayDate = currentPayDate;
-            currentPayDate = calculateNextPaymentDate(currentPayDate);
+            currentPayDate = calculateNextPaymentDate(currentPayDate, paymentDate);
         }
         description = "Ежемесячный платеж за " + formatDate(currentPayDate);
         days_in_calculation = getSumOfDatesPayment(calculationMethod, oldPayDate, currentPayDate);
@@ -430,24 +421,37 @@ function isLeapYear(date) {
 }
 
 // Вычесляет следубший дату оплаты
-function calculateNextPaymentDate(currentPayDate) {
+function calculateNextPaymentDate(currentPayDate, paymentDate) {
     // Проверяем, является ли currentPayDate экземпляром Date
     if (!(currentPayDate instanceof Date) || isNaN(currentPayDate.getTime())) {
         throw new Error('Invalid date');
     }
 
-    let nextDate = new Date(currentPayDate);
-    nextDate.setMonth(nextDate.getMonth() + 1);
-
-    return checkPayDate(nextDate);
+    console.log(checkDayInMonth(currentPayDate, paymentDate))
+    if (checkDayInMonth(currentPayDate, paymentDate)) {
+        let nextDate = new Date(currentPayDate);
+        nextDate.setMonth(currentPayDate.getMonth() + 1);
+        nextDate.setDate(paymentDate);
+        return checkPayDate(nextDate);
+    } else {
+        let nextDate = new Date(currentPayDate);
+        nextDate.setMonth(currentPayDate.getMonth() + 1); // Переход на месяц вперёд
+        nextDate.setDate(30); // Устанавливаем дату на 0, чтобы получить последний день предыдущего месяца
+        return checkPayDate(nextDate)
+    }
 }
 
-// проеверяет не является ли выбранный день субботой или воскреснеие
-function checkPayDate(payDate) {
+// Проверяет, существует ли день в следующем месяце
+function checkDayInMonth(currentDate, day) {
+    let date = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, day);
 
-    if (!(payDate instanceof Date)) {
-        throw new Error("Both variables must be Date objects");
-    }
+    // Если день превышает количество дней в следующем месяце,
+    // то дата перейдёт на следующий месяц, так что проверяем это.
+    return date.getDate() === day && date.getMonth() === (currentDate.getMonth() + 1) % 12;
+}
+
+// Проеверяет, не является ли выбранный день субботой или воскреснеие
+function checkPayDate(payDate) {
 
     // Проверяем день недели
     if (payDate.getDay() === 0) {
