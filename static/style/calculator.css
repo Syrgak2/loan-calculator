@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+}
+
+.calculator {
+    margin: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 300px;
+}
+
+@media (min-width: 768px)  {
+    .calculator {
+        width: 70%;
+    }
+    
+}
+.input-container {
+            display: flex;
+            align-items: center;
+            height: 100px;
+        }
+.label-container {
+            display: flex;
+            align-items: center;
+            height: 100px;
+        }
+.calculator {
+
+}
+
+.center-container {
+    border: 2px solid gray;
+    padding: 10px;
+    margin: 20px;
+}
+
+.heading-text {
+
+}
+.all-column12 {
+    width: 100%;
+}
+
+.line {
+    border: none;
+    height: 1px;
+    background-color: gray;
+    margin: 5px 0;
+}
+
+.row {
+    margin: 5px 0;
+}
+
+table {
+        border-collapse: separate; /* Оставляет пространство между границами ячеек */
+        border-spacing: 0 0;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid gray; /* Добавляет границу к ячейкам */
+        padding: 4px; /* Добавляет отступы внутри ячеек */
+        text-align: left;
+    }

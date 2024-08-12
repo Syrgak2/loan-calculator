@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    $('#loanParameters\\.date, #loanParameters\\.paymentDay').datepicker({
-        format: 'dd.mm.yyyy',
+    $('#loanParameters\\.date').datepicker({
+        format: 'yyyy.mm.dd',
         language: 'ru',
         todayHighlight: true,
         weekStart: 1
@@ -13,6 +13,16 @@ $(document).ready(function(){
             $('.advanced-settings').show();
         } else {
             $('.advanced-settings').hide();
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('#loanParameters\\.paymentType').change(function() {
+        if ($(this).val() === '3') {
+            $('.markup').show();
+        } else {
+            $('.markup').hide();
         }
     });
 });
