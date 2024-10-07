@@ -317,6 +317,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
 function generateTableRows(data) {
     const tbody = document.querySelector('#paymentCalculationTable tbody');
     tbody.innerHTML = '';
+    print(data)
 
     for (const item of data) {
         const tr = document.createElement('tr');
@@ -439,14 +440,6 @@ function calculateNextPaymentDate(currentPayDate, paymentDate) {
 
 }
 
-// Проверяет, существует ли день на следующем месяце
-function checkDayInMonth(currentDate, day) {
-    let date = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, day);
-
-    // Если день превышает количество дней в следующем месяце,
-    // то дата перейдёт на следующий месяц, так что проверяем это.
-    return date.getDate() === day && date.getMonth() === (currentDate.getMonth() + 1) % 12;
-}
 
 // Проверяет, не является ли выбранный день субботой или воскресеньем.
 // Если это конец месяца, устанавливает дату на пятницу, иначе на понедельник.
