@@ -1,6 +1,6 @@
 
 $('#calculateButton').on('click', function () {
-    var amount = $('#loanParameters\\.amount').val();
+    var amount = parseFloat($('#loanParameters\\.amount').val().replace(/\s/g, '').replace(/,/g, ''));
     var periodValue = parseInt($('#loanParameters\\.root_periodValue').val(), 10);
     var periodType = $('#loanParameters\\.root_periodType').val();
     var loanGivenDate = parseDate($('#loanParameters\\.date').val());
@@ -15,6 +15,8 @@ $('#calculateButton').on('click', function () {
 
     console.log("Hre")
     console.log(creditVacation)
+    console.log(amount, typeof amount)
+    console.log(percent)
 
 
     //
@@ -118,7 +120,7 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
 
 function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, calculationMethod, percent, creditVacation ) {
     // Преобразуйте сумму в число и округлите до двух знаков после запятой
-    let currentLoadBalance = parseFloat(amount);
+    let currentLoadBalance = amount;
     let oldPayDate = loanGivenDate;
     // Устанавливает следующий месяц после выдачи кредита и выбранный день оплаты как текущий день оплаты.
     let currentPayDate = calculateNextPaymentDate(loanGivenDate, paymentDate);
@@ -133,6 +135,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
     let mpr = percent / 100 / 12;
 
     let month_payment = parseFloat(((amount * mpr) / (1 - (1+mpr) ** (-periodValue))).toFixed(2));
+    console.log("month_payment", month_payment)
 
     let totalMonthPaymentSum = 0;
     let totalRepaymentPrincipalDebt = 0;
@@ -152,7 +155,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
         days_in_year = getSumDateOfYear(calculationMethod);
         daily_interest_rate = (percent / 100) / days_in_year;
 
-        percent_sum = parseFloat((currentLoadBalance * daily_interest_rate * days_in_calculation).toFixed(2));
+        percent_sum = parseFloat((currentLoadBalance * daily_interest_rate * parseFloat(days_in_calculation)).toFixed(2));
         main_sum = parseFloat((month_payment - percent_sum).toFixed(2));
 
         // Условия, которые срабатывают при добавлении отпусков.
@@ -168,7 +171,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
         // Рассчитывает оплату основного долга в последний месяц.
         // Делает так, чтобы не оставался остаток по основному долгу.
         if (i === periodValue - 1) {
-            main_sum = currentLoadBalance;
+            main_sum = parseFloat(currentLoadBalance.toFixed(2));
             month_payment = parseFloat((parseFloat(main_sum) + parseFloat(percent_sum)).toFixed(2));
 
             // иоги
@@ -194,12 +197,17 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
             description = "Итоги";
         }
 
+        console.log(month_payment)
+        console.log(main_sum)
+        console.log(currentLoadBalance)
+        console.log(percent_sum)
+
         const item = {
             number: i + 1,
             date: formatDate(currentPayDate),
-            sum: month_payment,
-            repaymentPrincipalDebt: parseFloat(parseFloat(main_sum).toFixed(2)),
-            percentPayment: percent_sum,
+            sum: parseFloat(month_payment),
+            repaymentPrincipalDebt: parseFloat(main_sum),
+            percentPayment: parseFloat(percent_sum),
             loadBalance: parseFloat(currentLoadBalance.toFixed(2)),
             description: description,
         };
@@ -290,9 +298,9 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
         // В последней итерации проводить итоги.
         if (i === parseInt(periodValue)) {
             console.log("if i === periodValue")
-            month_payment = totalMonthPaymentSum.toFixed(2);
-            percent_sum = totalPercentPayment.toFixed(2);
-            main_sum = totalRepaymentPrincipalDebt.toFixed(2);
+            month_payment = parseFloat(totalMonthPaymentSum.toFixed(2));
+            percent_sum = parseFloat(totalPercentPayment.toFixed(2));
+            main_sum = parseFloat(totalRepaymentPrincipalDebt.toFixed(2));
             currentLoadBalance = 0;
             description = "Итоги";
         }
