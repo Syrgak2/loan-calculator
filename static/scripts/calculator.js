@@ -68,7 +68,7 @@ function generateDifferentialData(amount, periodValue, loanGivenDate, paymentDat
             currentPayDate = calculateNextPaymentDate(currentPayDate, paymentDate);
         }
 
-        percentPayment = differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, currentLoadBalance, percent);
+        percentPayment = differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, currentLoadBalance, percent, loanGivenDate);
         // Рассчитывает оплату основного долга в последний месяц.
         // Делает так, чтобы не оставался остаток по основному долгу.
         if (i === periodValue - 1) {
@@ -152,7 +152,7 @@ function generateAnnuityData(amount, periodValue, loanGivenDate, paymentDate, ca
 
         description = "Ежемесячный платеж за " + formatDate(currentPayDate);
         days_in_calculation = getSumOfDatesPayment(calculationMethod, oldPayDate, currentPayDate);
-        days_in_year = getSumDateOfYear(calculationMethod);
+        days_in_year = getSumDateOfYear(calculationMethod, loanGivenDate);
         daily_interest_rate = (percent / 100) / days_in_year;
 
         percent_sum = parseFloat((currentLoadBalance * daily_interest_rate * parseFloat(days_in_calculation)).toFixed(2));
@@ -257,12 +257,12 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
         }
         description = "Ежемесячный платеж за " + formatDate(currentPayDate);
         days_in_calculation = getSumOfDatesPayment(calculationMethod, oldPayDate, currentPayDate);
-        days_in_year = getSumDateOfYear(calculationMethod);
+        days_in_year = getSumDateOfYear(calculationMethod, loanGivenDate);
         daily_interest_rate = (percent / 100) / days_in_year;
 
         percent_sum = parseFloat((currentLoadBalance * daily_interest_rate * days_in_calculation).toFixed(2));
         main_sum = parseFloat((month_payment - percent_sum).toFixed(2));
-    
+
         
         // Рассчитывает оплату основного долга в последний месяц.
         // Обеспечивает отсутствие остатка по основному долгу.
@@ -325,7 +325,7 @@ function generateAnnuityDataByIslamicPrincipal (amount, periodValue, loanGivenDa
 function generateTableRows(data) {
     const tbody = document.querySelector('#paymentCalculationTable tbody');
     tbody.innerHTML = '';
-    print(data)
+    console.log(data)
 
     for (const item of data) {
         const tr = document.createElement('tr');
@@ -368,14 +368,14 @@ function generateTableRows(data) {
 
 
 // Проценты для дифференцированного расчета.
-function differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, amount, percent) {
+function differentiatedPercentCalculation(calculationMethod, oldPayDate, currentPayDate, amount, percent, loanGivenDate) {
         let sumDate = getSumOfDatesPayment(calculationMethod, oldPayDate, currentPayDate);
-        let sumDateOfYear = getSumDateOfYear(calculationMethod);
+        let sumDateOfYear = getSumDateOfYear(calculationMethod, loanGivenDate);
     return parseFloat((parseFloat(amount) * (parseFloat(percent) / 100 * parseFloat(sumDate) / sumDateOfYear)).toFixed(2))
 }
 
 
-//  id 1 = 30/360
+// id 1 = 30/360
 // id 2 = факт/факт
 // id 3 = факт/360
 // id 4 = 30/факт
